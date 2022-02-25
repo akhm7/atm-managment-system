@@ -1,0 +1,60 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<h3 class="mt-4">Модели банкоматов</h3>
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Список
+        <a href="{% url 'model-create' %}" style="float:right;">
+            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-plus-square"></i> Создать</button>
+        </a>
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th scope="col">Компания</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Функционал</th>
+                    <th scope="col">Фото</th>
+                    <th scope="col">Управление</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in model_list %}
+                <tr>
+                    <td>{{ m.company}}</td>
+                    <td>{{ m.name }}</td>
+                    <td class="col-8">
+                        {% for mf in m.functions.all %}
+                            {{ mf.html|safe }}
+                        {% empty %}
+                            No tags!
+                        {% endfor %}
+                    </td>
+                    <td class="col-1">
+                        {% if m.image %}
+                        <img style="object-position:left top;object-fit: cover;height:110px;max-width:110px;" src="{{ m.image.url }}" class="bd-placeholder-img card-img-top"/>
+                        {% else %}
+                        <img style="object-position:left top;object-fit: cover;height:110px;max-width:110px;" src="/media/model/unknwn.png" class="bd-placeholder-img card-img-top"/>
+                        
+                        {% endif %}
+                        
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group" >
+                            <a href="{% url 'model-edit' m.pk %}" class="btn btn-dark"><i class="fas fa-edit"></i></a>
+                            <a href="{% url 'model-delete' m.pk %}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

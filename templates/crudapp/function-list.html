@@ -1,0 +1,46 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<h3 class="mt-4">Функционал моделей</h3>
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Список
+        <a href="{% url 'function-create' %}" style="float:right;">
+            <button type="button" class="btn btn-success btn-sm">Создать</button>
+        </a>
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th scope="col">Название</th>
+                    <th scope="col">Отображение</th>
+                    <th scope="col">Бейджик (HTML)</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">Управление</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in function_list %}
+                <tr>
+                    <td>{{ f.name }}</td>
+                    <td><h5>{{ f.html|safe }}</h5></td>
+                    <td>{{ f.html }}</td>
+                    <td>{{ f.description }}</td>
+                    <td>
+                        <div class="btn-group" role="group" >
+                            <a href="{% url 'function-edit' f.pk %}" class="btn btn-dark"><i class="fas fa-edit"></i></a>
+                            <a href="{% url 'function-delete' f.pk %}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends './base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-header"><h5 class="text-center font-weight-light my-3">Авторизация</h5></div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <code>{{ form.non_field_errors }}
+                        {% if request.GET|length > 0 and request.GET.next and request.GET.next != '/' %}
+                        <ul class="erroraccess"><li>Ошибка доступа. Зайдите под учетной записью, которая имеет доступ к данному ресурсу.</li></ul>
+                        {% endif %}</code>
+                        <div class="form-floating mb-3">
+                            {{ form.username.errors }}
+                            {% render_field form.username id= class="form-control" %}
+                            <label for="{{ form.username.id_for_label }}">Логин:</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.password.errors }}
+                            {% render_field form.password class="form-control" %}
+                            <label for="{{ form.password.id_for_label }}">Пароль:</label>
+                        </div>
+                        <div class="d-grid gap-2 mt-2 mb-0">
+                            <input class="btn btn-primary" type="submit" value="Логин">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

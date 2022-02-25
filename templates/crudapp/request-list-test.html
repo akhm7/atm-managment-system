@@ -1,0 +1,66 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<h3 class="mt-4">API</h3>
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Полученные данные
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple" data-toggle="table" data-sort-name="id" data-sort-order="desc">
+            <thead>
+                <tr>
+                    <th scope="col" data-field="id" data-sortable="true">ID</th>
+                    <th scope="col" data-sortable="false">Опции</th>
+                    <th scope="col">API</th>
+                    <th scope="col">Таблица</th>
+                    <th scope="col">Дата</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in request_list_test %}
+                <tr>
+                    <th scope="row">{{ f.id }}</th>
+                    <td>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#Backdrop_{{ f.id }}">
+                            <i class="fas fa-code"></i>
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="Backdrop_{{ f.id }}" data-bs-keyboard="false" tabindex="-1" aria-labelledby="BackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">{{f.table_name}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body {% if not f.data %}bg-danger text-white{% elif f.table_name == 'Not formattabled' %}bg-dark text-white{% else %}bg-success text-white{% endif %}">
+                                    <div class="card-body"><pre><code>{{f.request}}</code></pre></div>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'request-full-test' f.id %}">
+                            <button type="button" class="btn btn-outline-secondary" >
+                                <i class="fas fa-window-maximize"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>{{ f.endpoint }}</td>
+                    <td class="{% if f.table_name == 'SET0_ACC_TR_ALL' %}table-primary{% elif f.table_name == 'MERCHANTS_ALL' %}table-success{% else %}table-danger{% endif %}">{{ f.table_name }}</td>
+                    <td>{{ f.dt }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="card mt-5">
+    <div class="card-header">
+        <b>Создать</b>
+        <a href="{% url 'atms' %}" style="float:right;" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-alt-circle-left"></i> Назад к списку</a>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <div class="card-body">
+            {% csrf_token %}
+            {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+            <div class="form-group p-2">
+                {{ field.label_tag }}
+                {% render_field field class="form-control" %}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <label for="map-label">Maps:</label>
+            <div class="card mb-3">
+                <div id='map' style='height:300px;'></div>
+                <script>
+                    document.getElementById('id_lat').value = 41.310022018882876;
+                    document.getElementById('id_long').value = 69.27778542572366
+                    
+                    mapboxgl.accessToken = 'pk.eyJ1Ijoic3VpdGUiLCJhIjoiY2t5Mm1kcXp4MG1kcTJ2cGVvMnEzZjdscCJ9.6iIgS8Cz2yR2MSjYc6LuUA';
+                    const map = new mapboxgl.Map({
+                    container: 'map', // container id
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [69.27778542572366, 41.310022018882876], // starting position
+                    zoom: 17 // starting zoom
+                    });
+                    map.dragRotate.disable();
+                    map.on('contextmenu', (e) => {
+                    document.getElementById('id_lat').value = e.lngLat.lat;
+                    document.getElementById('id_long').value = e.lngLat.lng;
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="card-footer"><button type="submit" class="btn btn-success">Создать</button></div>
+    </form>
+</div>
+
+{% endblock %}

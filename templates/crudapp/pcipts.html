@@ -1,0 +1,44 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+{% load convert_html %}
+<h3 class="mt-4">PCI Security Standards Council</h3>
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Approved PTS Devices
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th scope="col">Наименование</th>
+                    <th scope="col">Компания</th>
+                    <th scope="col">Модель</th>
+                    <th scope="col">Номер утверждения</th>
+                    <th scope="col">Версия</th>
+                    <th scope="col">Железо</th>
+                    <th scope="col">Прошивка</th>
+                    <th scope="col">Срок</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in pcipts %}
+                <tr>
+                    <td>{{ t.approval_class }}</td>
+                    <td>{{ t.manufacturer_name }}</td>
+                    <td>{{ t.model_name }}</td>
+                    <td>{{ t.approval_number }}</td>
+                    <td>{{ t.version }}</td>
+                    <td>{{ t.hardware_number|convert_html|linebreaksbr }}</td>
+                    <td>{{t.firmware_number|convert_html|linebreaksbr  }}</td>
+                    <td>{{ t.expiry_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

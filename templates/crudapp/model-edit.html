@@ -1,0 +1,30 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="card mt-5">
+    <div class="card-header">
+        <b>Редактировать</b>
+        <a href="{% url 'model-list' %}" style="float:right;" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-alt-circle-left"></i> Назад к списку</a>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <div class="card-body">
+            {% csrf_token %}
+            {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+            <div class="form-group p-2">
+                {{ field.label_tag }}
+                {% render_field field class="form-control" %}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="card-footer"><button type="submit" class="btn btn-success">Сохранить</button></div>
+    </form>
+</div>
+
+{% endblock %}

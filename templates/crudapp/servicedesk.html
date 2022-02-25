@@ -1,0 +1,70 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Все заявки
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple" class="table table-bordered table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">TID</th>
+                    <th scope="col">Инициатор</th>
+                    <th scope="col">Филиал</th>
+                    <th scope="col">Банкомат</th>
+                    <th scope="col">Модель</th>
+                    <th scope="col">Terminal</th>
+                    <th scope="col">Исполнитель</th>
+                    <th scope="col">Комментарий</th>
+                    <th scope="col">Детали</th>
+                    <th scope="col">Создан</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in servicedesk %}
+                <tr>
+                    <th scope="row">
+                        <a href="{% url 'ticket' t.id %}">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <span class="btn btn-sm {% if t.edited == 1 %}bg-dark{%else%}bg-secondary{%endif%} text-white">#{{ t.id }}</span>
+                            {% if t.status == 0 %}
+                            <span class="btn btn-sm  btn-primary" style="width: 6rem;">Открыто</span>
+                            {% elif t.status == 1 %}
+                            <span class="btn btn-sm  btn-success" style="width: 6rem;">Закрыто</span>
+                            {% elif t.status == 2 %}
+                            <span class="btn btn-sm  btn-light text-dark" style="width: 6rem;">Отменено</span>
+                            {% elif t.status == 3 %}
+                            <span class="btn btn-sm  btn-info text-dark" style="width: 6rem;">Service<span>
+                            {% elif t.status == 4 %}
+                            <span class="btn btn-sm  btn-warning text-dark" style="width: 6rem;">В работе</span>
+                            {% else %}
+                            <span class="btn btn-sm  btn-dark text-white" style="width: 6rem;">Неизвестно</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                        
+                    </td>
+                    <td>{{ t.user.name }}</td>
+                    <td>{{ t.user.mfo }}</td>
+                    <td>
+                        <a href="{% url 'detail' t.atm.id %}" class="badge bg-dark text-white">#{{ t.atm.id|stringformat:"04d"}}</a> {{ t.atm.name }}</td>
+                    <td>{{ t.atm.atmModelId.company }} {{ t.atm.atmModelId.name }}</td>
+                    <td>{{ t.atm.terminalId }}</td>
+                    <td>{%if t.operator %}{{ t.operator }}{%endif%}</td>
+                    <td>{%if t.description %}{{ t.description }}{%endif%}</td>
+                    <td>
+                        {% for b in t.broken.all %}<span class="badge bg-light text-dark">{{ b.title }}</span> {% endfor %}
+                    </td>
+                    <td>{{ t.dataCreated }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

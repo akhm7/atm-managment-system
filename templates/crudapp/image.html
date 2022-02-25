@@ -1,0 +1,46 @@
+{% extends 'crudapp/base.html' %}
+{% block content %}
+{% load widget_tweaks %}
+<h1 class="mt-4">Upload Image for ATM</h1>
+<br />
+<div class='card p-3'>
+<form method="post" enctype="multipart/form-data" class='form'>
+    {% csrf_token %}
+    <div class="mb-1">
+      <label class='form-label'>Image: </label>
+    </div>
+    <div class="mb-1">
+      {{ form.image|add_class:"form-control" }}
+    </div>
+    <div class="mb-1">
+      <label class='form-label'>Title: </label>
+    </div>
+    <div class="mb-1">
+      {{ form.title|add_class:"form-control" }}
+    </div>
+    <div class="mb-1">
+      <label class='form-label'>Description: </label>
+    </div>
+    <div class="mb-1">
+      {{ form.description|add_class:"form-control" }}
+    </div>
+    <div class="mb-1">
+      <label class='form-label'>ATM: </label>
+    </div>
+    <div class="mb-1">
+      {{ form.atmId|add_class:"form-control" }}
+      {{form.instance.atmId}}
+  </div>
+    
+    <div >
+      <button type="submit" class="btn btn-primary mt-3">Upload</button>
+    </div>
+  </form>
+</div>
+  {% if img_obj %}
+    <h3>Succesfully uploaded : {{img_obj.title}}</h3>
+    <img src="{{ img_obj.image.url}}" alt="connect" style="max-height:300px">
+  {% endif %}
+
+  
+{% endblock %}

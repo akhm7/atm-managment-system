@@ -1,0 +1,17 @@
+{% extends 'crudapp/base.html' %}
+{% block content %}
+<h1 class="mt-4">Удалить?</h1>
+<br />
+<form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+        <div class="alert alert-warning">
+            Вы уверены, что хотите удалить <strong>{{ object }}</strong>?
+        </div>
+    </div>
+    <button type="submit" class="btn btn-danger">
+        Да
+    </button>
+    <a href="{% url 'function-list' %}" class="btn btn-secondary">Нет</a>
+</form>
+{% endblock %}

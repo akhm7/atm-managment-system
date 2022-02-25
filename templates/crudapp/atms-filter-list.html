@@ -1,0 +1,75 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="card mb-4 mt-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Список банкоматов
+
+
+        <form method="GET" style="float:right;">
+            <div class="input-group input-group-sm">
+                {% render_field filter.form.atmModelId class="form-control" %}
+                {% render_field filter.form.mfo class="form-control" style="min-width:200px;" %}
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="fas fa-filter"></i></button>
+                {% if filter.is_bound %}
+                <a href="{%  url 'atms' %}" class="btn btn-outline-primary btn-sm"><i class="fas fa-trash-alt"></i></a>
+                {% endif %}
+                <a href="{% url 'create' %}" class="btn btn-outline-success btn-sm" style="float:right;"><i class="fas fa-plus-square"></i> Создать</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table id="datatablesSimple">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Название</th>
+            <th scope="col">Время работы</th>
+            <th scope="col">Серийный</th>
+            <th scope="col">Модель</th>
+            <th scope="col">Терминал</th>
+            <th scope="col">Мерчант</th>
+            <th scope="col">МФО</th>
+            <th scope="col">NFC</th>
+            <th scope="col">Сервис</th>
+            <th scope="col">Функции</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Управление</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for atm in filter.qs %}
+        <tr>
+            <td>{{ atm.id}}</td>
+            <td class="col-2">
+                <a href="{% url 'detail' atm.pk %}" class="text-decoration-none">{{ atm.name }}</a></td>
+            <td>{{ atm.get_workTime_display}}</td>
+            <td>{{ atm.serialNumber}}</td>
+            <td><a href="{% url 'atms' %}?atmModelId={{ atm.atmModelId.id|default:'' }}" class="text-decoration-none">{{ atm.atmModelId }}</a></td>
+            <td>{{ atm.terminalId }}</td>
+            <td>{{ atm.merchantId }}</td>
+            <td><a href="{% url 'atms' %}?mfo={{ atm.mfo.id|default:'' }}" class="text-decoration-none">{{ atm.mfo }}</a></td>
+            <td><span class="badge bg-light text-dark">{{ atm.get_NFC_display }}</span></td>
+            <td>{% if atm.service %}<div>{{ atm.service.get_type_display }}</div>{%else%}Отсуствует{%endif%}</td>
+            <td class="col-2">{% for f in atm.atmModelId.functions.all %}<span class="badge bg-light text-dark">{{f.name}}</span> {% endfor %}</td>
+            <td class="col-2">{{ atm.description }}</td>
+            <td class="col-3">
+                <div class="btn-group" role="group" >
+                    <a href="https://maps.yandex.ru/?text={{atm.lat}}+{{atm.long}}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-map-marked-alt"></i></a>
+                    <a href="{% url 'detail' atm.pk %}" class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i></a>
+                    <a href="{% url 'photo-upload-num' atm.pk %}" class="btn btn-secondary btn-sm"><i class="fas fa-camera"></i></a>
+                    <a href="{% url 'edit' atm.pk %}" class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i></a>
+                    <a href="{% url 'delete' atm.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="mb-3"></div>
+
+{% endblock %}

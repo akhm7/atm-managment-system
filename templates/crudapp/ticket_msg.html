@@ -1,0 +1,230 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+{% load humanize %}
+
+<h5 class="mt-4 text-center mb-5">Тикет #{{obj.id}}</h5>
+
+
+
+<div class="container">
+  <div class="accordion" id="accordionExample">
+  <div class="steps">
+      <progress id="progress" value=0 max=100 ></progress>
+      <div class="step-item">
+          <button class="step-button text-center {% if obj.status == 0 %}done{%endif%}" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapseOne" aria-expanded="{% if obj.status == 0 %}true{%else%}false{%endif%}" aria-controls="collapseOne">
+              1
+          </button>
+          <div class="step-title">
+              Создан
+          </div>
+      </div>
+      <div class="step-item">
+          <button class="step-button text-center collapsed {% if obj.status == 4 or obj.status == 3 %}done{%endif%}" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo" aria-expanded="{% if obj.status == 4 or obj.status == 3 %}true{%else%}false{%endif%}" aria-controls="collapseTwo">
+              2
+          </button>
+          <div class="step-title">
+              Решение
+          </div>
+      </div>
+      <div class="step-item">
+          <button class="step-button text-center collapsed {% if obj.status == 1 or obj.status == 2 or obj.status > 4  %}done{%endif%}" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapseThree" aria-expanded="{% if obj.status == 1 or obj.status == 2 or obj.status > 4  %}true{%else%}false{%endif%}" aria-controls="collapseThree">
+              3
+          </button>
+          <div class="step-title">
+              Закрыт
+          </div>
+      </div>
+  </div>
+  
+  <div class="card">
+      <div  id="headingOne">
+      </div>
+  
+      <div id="collapseOne" class="collapse{% if obj.status == 0 %} show{%endif%}" aria-labelledby="headingOne"
+          data-bs-parent="#accordionExample">
+          <div class="card-body">
+                {% if obj.atm.atmModelId.image %}<img style="max-height:200px;max-width:200px;float:left;" src="/media/{{obj.atm.atmModelId.image}}"/>{% endif %}
+                <div><strong>Номер</strong>: #{{obj.id}}</div>
+                {% if obj.status == 0 %}<div><strong>Статус</strong>: <span class="badge bg-primary text-white">Открыто</span></div>{% endif %}
+                <div><strong>Открыт</strong>: {{ obj.dataCreated }}</div>
+                <div><strong>Инициатор</strong>: {{obj.user.name}}</div>
+                <div><strong>Банкомат</strong>: <a href="{% url 'detail' obj.atm.id %}">{{obj.atm.name}}</a></div>
+                <div><strong>Модель</strong>: {{obj.atm.atmModelId.company}} {{obj.atm.atmModelId.name}}</div>
+                <div><strong>Терминал ID</strong>: {{obj.atm.terminalId}}</div>
+
+              <div class="btn-group mt-4 mb-4" role="group" >
+                {% for b in obj.broken.all %}<span class="btn btn-dark mx-1">{{ b.title }}</span>{% endfor %}
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="card">
+      <div  id="headingTwo">
+  
+      </div>
+      <div id="collapseTwo" class="collapse{% if obj.status == 4 or obj.status == 3 %} show{%endif%}" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+          <div class="card-body">
+            <div class="mb-5">
+              {% if obj.atm.atmModelId.image %}<img style="max-height:200px;max-width:200px;float:left;" src="/media/{{obj.atm.atmModelId.image}}"/>{% endif %}
+              <div><strong>Статус</strong>:
+                {% if obj.status == 0 %}
+                <span class="badge bg-primary text-white">Открыто</span> 
+                {% elif obj.status == 1 %}
+                <span class="badge bg-success text-white">Закрыто</span> 
+                {% elif obj.status == 2 %}
+                <span class="badge bg-light text-dark">Отменено</span> 
+                {% elif obj.status == 3 %}
+                <span class="badge bg-info text-dark">Сервисное обслуживание</span> 
+                {% elif obj.status == 4 %}
+                <span class="badge bg-warning text-dark">В работе</span> 
+                {% else %}
+                <span class="badge bg-dark">Неизвестно</span> 
+                {% endif %}
+              </div>
+              <div><strong>Последнее действие</strong>: {{ obj.dataClosed|naturaltime }}</div>
+              <div><strong>Инициатор</strong>: {{obj.user.name}}</div>
+              <div><strong>Банкомат</strong>: <a href="{% url 'detail' obj.atm.id %}">{{obj.atm.name}}</a></div>
+              <div><strong>Модель</strong>: {{obj.atm.atmModelId.company}} {{obj.atm.atmModelId.name}}</div>
+              <div><strong>Терминал ID</strong>: {{obj.atm.terminalId}}</div>
+              {% if obj.operator %}<div><strong>Исполнитель</strong>: {{obj.operator}}</div>{%endif%}
+              {% if obj.description %}<div><strong>Ответ</strong>: {{obj.description}}</div>{%endif%}
+              <div class="btn-group mt-4 mb-4" role="group" >
+                {% for b in obj.broken.all %}<span class="badge bg-dark mx-1">{{ b.title }}</span>{% endfor %}
+              </div>
+            </div>
+            {% if not messages %}
+            Нет сообщений
+            {% else %}
+            <div style = "display: flex;flex-direction: column;justify-content: space-between;">
+            {% for m in messages %}
+              <div class="mb-3 border-end {% if m.operator %}border-danger{%else%} border-primary{%endif%} border-4 shadow-sm position-relative p-2" {% if m.operator %}style="display:block;max-width:80%;width:1000px;align-self:self-end;background:rgb(255 225 225 / 25%);"{% else %}style="display:block;max-width:80%;width:1000px;align-self:self-start;background:rgb(238 245 255 / 25%);"{% endif %}>
+                  <div class="d-flex justify-content-between">
+                    <span class="position-absolute bottom-0 end-0 text-muted m-2">{{m.date|naturaltime}} <span class="visually-hidden"></span></span>
+                  </div>
+                  <p class="mb-1">
+                    {% if m.text %}
+                      {{ m.text|safe }}
+                    {% elif m.sticker %}
+                    <span class="text-muted">Стикер</span>
+                    {% elif m.animation %}
+                    <span class="text-muted">GIF</span>
+                    {% elif m.document %}
+                      {% if m.document %}
+                        <a href="/media/{{m.path}}" class="text-decoration-none"  target="_blank"><i class="fas fa-download"></i></a> {{m.document.file_name}}
+                      {% else %}
+                        Файл
+                      {%endif%}
+                    {% elif m.contact %}
+                      Контакт <code>{{m.contact.phone_number}}</code> 
+                    {% elif m.location %}
+                    <code>{{m.location.latitude}}; {{m.location.longitude}}</code><br/>
+                    <a href="https://maps.yandex.ru/?text={{m.location.latitude}}+{{m.location.longitude}}" class="btn btn-warning btn-sm"><i class="fas fa-map-marked-alt" target="_blank"></i> Yandex.<b>Maps</b></a>
+                    {% elif m.voice %}
+                      {% if m.download %}
+                        <audio controls style="border-radius: 0px;">
+                          <source src="/media/{{m.path}}" type="audio/ogg">
+                          Your browser does not support the audio tag.
+                        </audio>
+                      {% else %}
+                        <span class="text-muted">Голосовое сообщение</span>
+                      {%endif%}
+                    {% elif m.video_note %}
+                      {% if m.download %}
+                        
+                        <video controls>
+                          <source src="/media/{{m.path}}" type="video/mp4">
+                          Your browser does not support the video tag.
+                        </video>
+                      {% else %}
+                      <span class="text-muted">Видео-сообщение</span>
+                      {%endif%}
+                    {% elif m.video %}
+                      {% if m.download %}
+                        <video controls>
+                          <source src="/media/{{m.path}}" type="video/mp4">
+                          Your browser does not support the video tag.
+                        </video>
+                      {% else %}
+                      <span class="text-muted">Видео-файл</span>
+                      {%endif%}
+                    {% elif m.photo %}
+                      {% if m.download %}
+                      <a href="/media/{{m.path}}" target="_blank">
+                        <div class="img-fluid img-thumbnail mb-2" style="height:200px; max-width:200px;background-image: url('/media/{{m.path}}');background-repeat: no-repeat;background-size: cover;"><i class="fas fa-download"></i></div>
+                      </a>
+                      {% else %}
+                      <span class="text-muted">Фото</span>
+                      {%endif%}
+                    {% else %}
+                    <span class="text-muted">Неизвестно</span>
+                    {% endif %}
+      
+                  </p>
+              </div>
+            {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+      </div>
+  </div>
+  <div class="card">
+      <div  id="headingThree">
+  
+      </div>
+      <div id="collapseThree" class="collapse{% if obj.status == 1 or obj.status == 2 or obj.status > 4  %} show{%endif%}" aria-labelledby="headingThree"
+          data-bs-parent="#accordionExample">
+          <div class="card-body">
+            {% if obj.status == 1 or obj.status == 2 or obj.status == 3 or obj.status > 4%}
+            {% if obj.atm.atmModelId.image %}<img style="max-height:200px;max-width:200px;float:left;" src="/media/{{obj.atm.atmModelId.image}}"/>{% endif %}
+            <div><strong>Закрыт</strong>: {{ obj.dataClosed }} (Открыт {{ obj.dataCreated|naturaltime }})</div>
+            <div><strong>Инициатор</strong>: {{obj.user.name}}</div>
+            <div><strong>Банкомат</strong>: <a href="{% url 'detail' obj.atm.id %}">{{obj.atm.name}}</a></div>
+            <div><strong>Модель</strong>: {{obj.atm.atmModelId.company}} {{obj.atm.atmModelId.name}}</div>
+            {% if obj.operator %}<div><strong>Исполнитель</strong>: {{obj.operator}}</div>{%endif%}
+            {% if obj.description %}<div><strong>Ответ</strong>: {{obj.description}}</div>{%endif%}
+            <div class="btn-group mt-4 mb-4" role="group" >
+              {% for b in obj.broken.all %}<span class="btn btn-dark mx-1">{{ b.title }}</span>{% endfor %}
+            </div>
+            {% else %}
+              Заявка не закрыта.
+            {% endif %}
+
+          </div>
+      </div>
+  </div>
+  </div>
+  </div>
+
+
+<div class="card mb-3 mt-5">
+  <div class="card-header">
+    <a href='/servicedesk' style="float:right;" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-alt-circle-left"></i> Назад к списку</a>
+  </div>
+  <form method="post" enctype="multipart/form-data">
+    <div class="card-body">
+        {% csrf_token %}
+        {% for hidden_field in form.hidden_fields %}
+        {{ hidden_field }}
+        {% endfor %}
+        {% for field in form.visible_fields %}
+        <div class="form-group p-2">
+            {{ field.label_tag }}
+            {% render_field field class="form-control" %}
+            {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="card-footer"><button type="submit" class="btn btn-success">Сохранить</button></div>
+  </form>
+</div>
+    
+{% endblock %}
+
+
+

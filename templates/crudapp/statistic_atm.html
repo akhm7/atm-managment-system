@@ -1,0 +1,78 @@
+{% extends 'crudapp/base.html' %}
+{% block content %}
+
+<div class="card mb-4 mt-4">
+    <div class="card-body">
+        <a href="{% url 'export_report_csv' %}" style="float:right;">
+            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i> Экспорт</button>
+        </a>
+    </div>
+    </div>
+        <table class="table table-bordered table-striped table-sm">
+            <thead>
+                <tr class="align-middle">
+                    <th rowspan=2>Мфо</th>
+                    <th rowspan=2>Название</th>
+                    <th rowspan=2>Устройства</th>
+                    <th colspan=2>Из них</th>
+                    <th colspan=2>Uzcard</th>
+                    <th colspan=2>Humo</th>
+                    <th colspan=2>Процессинг</th>
+                    <th rowspan=2>ADM</th>
+                </tr>
+                <tr>
+                    <th class="col">Cash-Out</th>
+                    <th class="col">Cash-In</th>
+                    <th class="col">Cash-Out</th>
+                    <th class="col">Cash-In</th>
+                    <th class="col">Cash-Out</th>
+                    <th class="col">Cash-In</th>
+                    <th class="col">Cash-Out</th>
+                    <th class="col">Cash-In</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in statistics %}
+                <tr>
+                    <td>
+                        {{i.number_zfill}}
+                    </td>
+                    <th>
+                        {{i.name}}
+                    </th>
+                    <td>
+                        {{i.count}}
+                    </td>
+                    <td>
+                        {{i.devicesTotalCashOut}}
+                    </td>
+                    <td>
+                        {{i.devicesTotalCashIn}}
+                    </td>
+                    <td>
+                        {{i.UzcardCashOut}}
+                    </td>
+                    <td>
+                        {{i.UzcardCashIn}}
+                    </td>
+                    <td>
+                        {{i.HumoCashOut}}
+                    </td>
+                    <td>
+                        {{i.HumoCashIn}}
+                    </td>
+                    <td>
+                        {{i.InHouseCashOut}}
+                    </td>
+                    <td>
+                        {{i.InHouseCashIn}}
+                    </td>
+                    <td>
+                        {{i.admsTotalCount}}
+                    </td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+
+{% endblock %}

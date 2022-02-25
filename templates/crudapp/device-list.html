@@ -1,0 +1,127 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<h3 class="mt-4">Colvir</h3>
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Полученные данные
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">OPTIONS <i class="fas fa-edit"></i></th>
+                    <th scope="col">TERMINAL_ID</th>
+                    <th scope="col">ACCEPTOR_ID</th>
+                    <th scope="col">TERM_TYPE</th>
+                    <th scope="col">POINT_CODE</th>
+                    <th scope="col">SERIAL_NR</th>
+                    <th scope="col">INV_NR</th>
+                    <th scope="col">dt</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in device_list %}
+                <tr>
+                    <th scope="row">{{ f.id }}</th>
+                    <td>
+                        {% if f.regtseId %}
+                            <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{ f.regtseId.pk }}">
+                                    <i class="fas fa-store"></i>
+                                </button>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop_{{ f.regtseId.pk }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Regtse Info</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                                <tr>
+                                                    <th>TERMINAL_ID</th><td>{{ f.TERMINAL_ID }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>MERCHANT</th><td>{{ f.regtseId.MERCHANT }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>PARENT</th><td>{{ f.regtseId.PARENT }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>ABRV_NAME</th><td>{{ f.regtseId.ABRV_NAME }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>FULL_NAME</th><td>{{ f.regtseId.FULL_NAME }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>CNTRY</th><td>{{ f.regtseId.CNTRY }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>CITY</th><td>{{ f.regtseId.CITY }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>STREET</th><td>{{ f.regtseId.STREET }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>REG_NR</th><td>{{ f.regtseId.REG_NR }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>PHONE</th><td>{{ f.regtseId.PHONE }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>MCC</th><td>{{ f.regtseId.MCC }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>POST_IND</th><td>{{ f.regtseId.POST_IND }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>MRC_PHONE</th><td>{{ f.regtseId.MRC_PHONE }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>dt</th><td>{{ f.regtseId.dt }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <a href="{% url 'regdev-status-change' f.pk %}">
+                            {% if f.status %}
+                                <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="far fa-circle"></i>
+                                </button>
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>{{ f.TERMINAL_ID }}</td>
+                    <td>{{ f.ACCEPTOR_ID }}</td>
+                    <td>{{ f.TERM_TYPE }}</td>
+                    <td>{{ f.POINT_CODE }}</td>
+                    <td>{{ f.SERIAL_NR }}</td>
+                    <td>{{ f.INV_NR }}</td>
+                    <td>{{ f.dt }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

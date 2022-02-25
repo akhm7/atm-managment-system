@@ -1,0 +1,62 @@
+{% extends 'crudapp/base.html' %}
+{% block content %}
+
+<h3 class="mt-4">Банкоматы</h3>
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Список
+        <a href="{% url 'create' %}" style="float:right;">
+            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-plus-square"></i> Создать</button>
+        </a>
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Серийный</th>
+                    <th scope="col">Модель</th>
+                    <th scope="col">Терминал</th>
+                    <th scope="col">Мерчант</th>
+                    <th scope="col">NFC</th>
+                    <th scope="col">Сервис</th>
+                    <th scope="col">Функции</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">Управление</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atm in atm_list %}
+                <tr>
+                    <td>{{ atm.id}}</td>
+                    <td class="col-2">
+                        <a href="{% url 'detail' atm.pk %}">{{ atm.name }}</a></td>
+                    <td>{{ atm.serialNumber}}</td>
+                    <td>{{ atm.atmModelId }}</td>
+                    <td>{{ atm.terminalId }}</td>
+                    <td>{{ atm.merchantId }}</td>
+                    <td>{{ atm.mfo }}</td>
+                    <td>{{ atm.NFC }}</td>
+                    <td>{{ atm.get_service_display }}</td>
+                    <td class="col-2">{% for f in atm.atmModelId.functions.all %}{{f.name}} {% endfor %}</td>
+                    <td class="col-2">{{ atm.description }}</td>
+                    <td class="col-3">
+                        <div class="btn-group" role="group" >
+                            <a href="https://maps.yandex.ru/?text={{atm.lat}}+{{atm.long}}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-map-marked-alt"></i></a>
+                            <a href="{% url 'detail' atm.pk %}" class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i></a>
+                            <a href="{% url 'photo-upload-num' atm.pk %}" class="btn btn-secondary btn-sm"><i class="fas fa-camera"></i></a>
+                            <a href="{% url 'edit' atm.pk %}" class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i></a>
+                            <a href="{% url 'delete' atm.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<a href='../' style="float:right;" class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Назад к списку</a>
+<a href='/servicedesk/atm/{{obj.id}}/' style="float:right;" class="btn btn-primary mx-2">История заявок</a>
+{% if obj.atmModelId.image %}<img style="max-height:75px;max-width:75px;float:left;" src="/media/{{obj.atmModelId.image}}"/>{% endif %}
+<h3 class="mt-3">Банкомат - {{object.name}} - {{object.get_workTime_display}}</h3>
+<span class="text-muted">{{obj.mfo}}</span>
+<div class="card mt-4">
+    <div class="card-header">
+        <div class="album py-2">
+            <div class="portfolio-item row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+                    {% for img in imgs %}
+                    <div class="col">
+                        <div class="card shadow-sm" style="max-width:400px;">
+                            <div class="card-header">
+                                <small class="text-muted">{{img.uploadedAt}}</small>
+                            </div>
+                            <a href="{{img.image.url}}" class="popup-btn fancylight" data-fancybox-group="light">
+                                <div class="card-body text-muted" style="height:200px;background-size: cover;background-image: url({{img.image.url}});"></div>
+                                <!----<img class="img-fluid" src="{{img.image.url}}" style="max-width:400px;" alt="">--->
+                            </a>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-3">
+        <ul class="list-group">
+            <li class="list-group-item">Модель: <div class="badge bg-dark">{{obj.atmModelId.company}} {{obj.atmModelId.name}}</div></li>
+            <li class="list-group-item">Серийный номер: <code>{{obj.serialNumber}}</code></li>
+            <li class="list-group-item">Терминал ID: <code>{{obj.terminalId}}</code></li>
+            <li class="list-group-item">Мерчант ID: <code>{{obj.merchantId}}</code></li>
+            {% if obj.mobile %}<li class="list-group-item">3G/4G: <code>{{obj.mobile}}</code></li>{% endif %}
+            {% if obj.inBankProcessing %}<li class="list-group-item">Процессинг: <code>{{obj.get_inBankProcessing_display}}</code></li>{% endif %}
+            <li class="list-group-item">NFC: <code>{{obj.get_NFC_display}}</code></li>
+            <li class="list-group-item">RDS Commander: <code>{{obj.get_RDSCommander_display}}</code></li>
+            {% if obj.exDate %}<li class="list-group-item">Эксплуатация: <code>{{obj.exDate}}</code></li>{% endif %}
+            <li class="list-group-item">Геолокация: <code>{{obj.lat}}; {{obj.long}}</code></li>
+            <li class="list-group-item"><p class="text-break">{{obj.description}}</p></li>
+            <li class="list-group-item" style='min-height:250px;' id='map'></li>
+        </ul>
+        <input type="hidden" id="id_long" value="{{obj.long}}">
+        <input type="hidden" id="id_lat" value="{{obj.lat}}">
+    </div>
+    <div class="card-footer">
+        <div class="btn-group" role="group" style="float:right;">
+            <a href="https://maps.yandex.ru/?text={{obj.lat}}+{{obj.long}}" class="btn btn-warning btn-sm"><i class="fas fa-map-marked-alt" target="_blank"></i> Yandex.<b>Maps</b></a>
+            <a href="{% url 'photo-upload-num' obj.pk %}" class="btn btn-success btn-sm" target="_blank"><i class="fas fa-camera"></i></a>
+            <a href="{% url 'edit' obj.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+            <a href="{% url 'delete' obj.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+        </div>
+        {% for f in obj.atmModelId.functions.all %}{{f.html|safe}} {% endfor %}
+    </div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic3VpdGUiLCJhIjoiY2t5Mm1kcXp4MG1kcTJ2cGVvMnEzZjdscCJ9.6iIgS8Cz2yR2MSjYc6LuUA';
+        const map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [parseFloat(document.getElementById('id_long').value.replace(/,/, '.')), parseFloat(document.getElementById('id_lat').value.replace(/,/, '.'))], // starting position
+        zoom: 17 // starting zoom
+        });
+        var marker = new mapboxgl.Marker({color: "#000000", draggable: true}).setLngLat([parseFloat(document.getElementById('id_long').value.replace(/,/, '.')), parseFloat(document.getElementById('id_lat').value.replace(/,/, '.'))]).addTo(map);
+                // $('.portfolio-item').isotope({
+        //  	itemSelector: '.item',
+        //  	layoutMode: 'fitRows'
+        //  });
+        // $('.portfolio-menu ul li').click(function(){
+        //  	$('.portfolio-menu ul li').removeClass('active');
+        //  	$(this).addClass('active');
+         	
+        //  	var selector = $(this).attr('data-filter');
+        //  	$('.portfolio-item').isotope({
+        //  		filter:selector
+        //  	});
+        //  	return  false;
+        //  });
+
+
+    </script>
+
+</div>
+
+
+
+{% endblock %}

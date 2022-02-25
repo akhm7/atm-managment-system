@@ -1,0 +1,91 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+
+
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Все заявки <div id='lal'></div>
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">UID</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">МФО</th>
+                    <th scope="col">Действие</th>
+                    <th scope="col">Авторизация</th>
+                    <th scope="col">Информация</th>
+                    <th scope="col">Язык</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in telegramUsers %}
+                <tr>
+                    <th scope="row">
+                        {{ u.id }}
+                    </td>
+                    <td>{{ u.uid }}</td>
+                    <td>{{ u.name }}</td>
+                    <td>
+                        <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="myFunction({{u.id}},this)">
+                            {% for m in mfo_list %}
+                            {% if u.mfo == m %}<option value="{{m.id}}" selected >{% else %}<option value="{{m.id}}">{%endif%}{{m}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>{{ u.stage }}</td>
+                    <td>{{ u.get_status_display }}</td>
+                    <td>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{  u.pk }}">
+                                userinfo
+                            </button>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop_{{ u.pk }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">json</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <code>{{ u.json_info }}</code>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                    </td>
+                    <td>{{ u.get_language_display }}</td>
+                </tr>
+                {% endfor %}
+                <script>
+                    function myFunction(x,y) {
+                        y = y.value;
+                        //document.getElementById("lal").innerHTML = "You selected: " + x +","+ y;
+                        
+                        const Http = new XMLHttpRequest();
+                        const url='/tg/users/'+x+'/'+y;
+                        Http.open("GET", url);
+                        Http.send();
+
+                        Http.onreadystatechange = (e) => {
+                            console.log(1)
+                        }
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

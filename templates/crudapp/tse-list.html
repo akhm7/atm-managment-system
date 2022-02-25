@@ -1,0 +1,71 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<h3 class="mt-4">Colvir</h3>
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Полученные данные
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">S</th>
+                    <th scope="col">MERCHANT</th>
+                    <th scope="col">PARENT</th>
+                    <th scope="col">ABRV_NAME</th>
+                    <th scope="col">FULL_NAME</th>
+                    <th scope="col">CNTRY</th>
+                    <th scope="col">CITY</th>
+                    <th scope="col">STREET</th>
+                    <th scope="col">REG_NR</th>
+                    <th scope="col">PHONE</th>
+                    <th scope="col">MCC</th>
+                    <th scope="col">POST_IND</th>
+                    <th scope="col">MRC_PHONE</th>
+                    <th scope="col">dt</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in tse_list %}
+                <tr>
+                    <th scope="row">{{ f.id }}</th>
+                    <td>
+                        <a href="{% url 'regtse-status-change' f.pk %}">
+                            {% if f.status %}
+                                <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="far fa-circle"></i>
+                                </button>
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>{{ f.MERCHANT }}</td>
+                    <td>{{ f.PARENT }}</td>
+                    <td>{{ f.ABRV_NAME }}</td>
+                    <td>{{ f.FULL_NAME }}</td>
+                    <td>{{ f.CNTRY }}</td>
+                    <td>{{ f.CITY }}</td>
+                    <td>{{ f.STREET }}</td>
+                    <td>{{ f.REG_NR }}</td>
+                    <td>{{ f.PHONE }}</td>
+                    <td>{{ f.MCC }}</td>
+                    <td>{{ f.POST_IND }}</td>
+                    <td>{{ f.MRC_PHONE }}</td>
+                    <td>{{ f.dt }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+

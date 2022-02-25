@@ -1,0 +1,23 @@
+{% extends 'crudapp/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<br />
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        {{object.createdAt}}
+        <a href='../' style="float:right;">
+            <button type="submit" class="btn btn-sm btn-secondary">Назад к списку</button>
+        </a>
+    </div>
+    <div class="card-body {% if code == 'Ошибка парсинга JSON.' %}bg-danger text-white{% endif %}"><pre><code>{{code}}</code></pre></div>
+</div>
+
+
+{% endblock %}
+
+
+
+
