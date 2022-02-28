@@ -20,17 +20,6 @@ class MfoStruct(models.Model):
             return 'unknown'
         return self.name+' ('+str(self.number).zfill(5)+')'
 
-class AtmModelFunction(models.Model):
-    name = models.CharField("Название", max_length=255,blank = True, null = True)
-    html = models.TextField(blank = True, null = False)
-    description = models.TextField(blank = True, null = True)
-
-    class Meta:
-        verbose_name = "Параметр"
-        verbose_name_plural = "Параметры"
-
-    def __str__(self):
-        return self.name
 
 class AtmModelFunction(models.Model):
     name = models.CharField("Название", max_length=255,blank = True, null = True)
@@ -136,8 +125,15 @@ class AtmImage(models.Model):
         return self.title
 
 class brokenCategory(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=128)
+    local_uz = models.CharField(max_length=128,null=True, blank=True)
+    local_ru = models.CharField(max_length=128,null=True, blank=True)
+    local_en = models.CharField(max_length=128,null=True, blank=True)
     description = models.TextField(null=True,blank=True)
+    description_uz = models.TextField(null=True,blank=True)
+    description_ru = models.TextField(null=True,blank=True)
+    description_en = models.TextField(null=True,blank=True)
+    priority = models.FloatField(default=0.,null=True, blank=True)
 
     def __str__(self):
         return self.title
