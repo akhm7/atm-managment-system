@@ -29,13 +29,13 @@ class telegramUserAdmin(admin.ModelAdmin):
     list_display=('uid', 'mfo', 'name', 'status','stage')
     list_filter = ('mfo','status')
     readonly_fields = ('uid','json_info','stage',)
-class brokenCategoryAdmin(admin.ModelAdmin):
-    list_display=('title', 'description')
+#class brokenCategoryAdmin(admin.ModelAdmin):
+#    list_display=('title')
 
 admin.site.register(PCIPTS, PCIPTSAdmin)
 admin.site.register(serviceContract, serviceContractAdmin)
 admin.site.register(ticket, ticketAdmin)
-admin.site.register(brokenCategory,brokenCategoryAdmin)
+admin.site.register(brokenCategory)#,brokenCategoryAdmin)
 
 
 admin.site.register(telegramUser, telegramUserAdmin)
